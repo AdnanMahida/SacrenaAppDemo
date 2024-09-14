@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Chat For Bob</title>
+</head>
+<body>
+    <h1>Stream Chat For Bob</h1>
+    <div id="chat-container"></div>
+
+    <!-- Include the Stream Chat SDK via CDN -->
+    <script type="module">
+        import { StreamChat } from "https://cdn.jsdelivr.net/npm/stream-chat@6.5.0/+esm";
+
+        /**
+         * ------------------------------
+         * YOU SHOULD SET UP THE FOLLOWING VARIABLES
+         * ------------------------------
+        */
+        // This is the get stream api key you must have gotten when you created account on getstream.io
+        const apiKey = 'pjbesuzmffub';
+        // This is the user id apart from one you are using in mobile app. As in, say Alice wants to talk to Bob 
+        // and Alice is using mobile, then this userId is of Bob's
+        const bobUserId = 'bob';
+        // You will get this token by authenticating Bob in getstream.io
+        const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYm9iIn0=.devtoken';
+
+        const client = StreamChat.getInstance(apiKey);
+
+        await client.connectUser(
+    {
+        id: bobUserId,
+        name: 'Bob',
+    },
+    userToken); 
+
+    console.log('Bob is connected to getstream.io');
+
+    // user id of alice in getstream.io
+    const aliceUserId = 'Alice';
+    const channel = client.channel('messaging', 'alice_bob_chat', {
+        name: 'Friendly Chat Between Alice & Bob',
+        members: [bobUserId, aliceUserId],
+    });
+
+
+    console.log('Channel created:', channel);
+    const state = await channel.watch();
+
+    channel.on('message.new', event => {
+        console.log('received a new message', event.message.text);
+        console.log(`Now have ${channel.state.messages.length} stored in local state`);
+    });
+
+    await channel.sendMessage({
+                text: 'Hello Alice!'
+            });
+    console.log('Message sent:', channel);        
+    
+    await channel.sendMessage({
+                text: 'What is going on bro!'
+            });
+    console.log('Message sent:', channel);  
+    </script>
+</body>
+</html>

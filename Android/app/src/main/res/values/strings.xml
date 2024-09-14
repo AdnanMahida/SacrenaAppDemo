@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SacrenaAppDemo</string>
+    <string name="api_key">pjbesuzmffub</string>
+
+    <string name="go">GO</string>
+    <string name="chat_app">Stream Chat For Alice</string>
+    <string name="log_out">Log Out</string>
+</resources>
